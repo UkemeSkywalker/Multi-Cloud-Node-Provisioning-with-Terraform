@@ -1,8 +1,8 @@
-# modules/gcp_nodes/main.tf
+data "google_compute_zones" "available" {}
 
-variable "node_count" {
-  description = "Number of nodes to provision"
-  type        = number
+resource "random_integer" "node_ids_gcp" {
+  min = 100
+  max = 999
 }
 
 resource "google_compute_instance" "nodes" {
@@ -10,7 +10,7 @@ resource "google_compute_instance" "nodes" {
   name         = "node-${random_integer.node_ids_gcp.result}-${count.index}"
   machine_type = "n1-standard-1"
   zone         = random_element(data.google_compute_zones.available.names)
-  tags         = ["web", "app"]
+  tags         = ["web", "app", "node"]
 
   boot_disk {
     initialize_params {
@@ -24,12 +24,3 @@ resource "google_compute_instance" "nodes" {
   }
 }
 
-output "provisioned_gcp_nodes" {
-  value = [
-    for idx, instance in google_compute_instance.nodes : {
-      node_id = instance.name
-      region  = split("-", instance.zone)[0]
-      zone    = instance.zone
-    }
-  ]
-}
