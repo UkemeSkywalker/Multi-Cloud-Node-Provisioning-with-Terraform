@@ -5,7 +5,7 @@ resource "random_integer" "node_ids_gcp" {
   max = 999
 }
 
-resource "google_compute_instance" "nodes" {
+resource "google_compute_instance" "supra_nodes" {
   count        = var.node_count
   name         = "node-${random_integer.node_ids_gcp.result}-${count.index}"
   machine_type = "n1-standard-1"
