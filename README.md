@@ -8,8 +8,10 @@ There are 2 folders in this repo:
 For now, we would make our deployments from the Isolated AWS directory
 Follow these steps.
 
-1. clone Repo   `git clone https://github.com/UkemeSkywalker/Multi-Cloud-Node-Provisioning-with-Terraform.git`
-2. Navigate to project directory: ` cd Isolated_AWS`
+1. clone Repo
+`git clone https://github.com/UkemeSkywalker/Multi-Cloud-Node-Provisioning-with-Terraform.git`
+2. Navigate to project directory: 
+` cd Isolated_AWS`
 3. Install AWS CLI [here] (https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 4. Login to AWS console and create an AWS user access credentials for the CLI
 5. Use `aws configure` to configure user credentials 
