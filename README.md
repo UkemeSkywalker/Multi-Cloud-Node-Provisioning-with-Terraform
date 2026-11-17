@@ -1,3 +1,5 @@
+<img width="3000" height="1600" alt="image-1794934076424" src="https://github.com/user-attachments/assets/fbd24b0a-2e65-4616-86b5-d9105a161cf6" />
+<img width="3000" height="1600" alt="image-1794934068625" src="https://github.com/user-attachments/assets/0306d811-5380-4a4f-bb12-664335982127" />
 
 # Multi-Cloud Node Provisioning with Terraform
 
