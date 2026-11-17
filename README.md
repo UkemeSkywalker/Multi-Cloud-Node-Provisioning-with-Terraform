@@ -1,27 +1,159 @@
-# Multi-Cloud-Node-Provisioning-with-Terraform
-A Terraform script that provisions a network of nodes, assigning random node IDs, in both Google Cloud Platform (GCP) and Amazon Web Services (AWS).
 
-There are 2 folders in this repo:
-- GCP & AWS (still in beta phase, under testing)
-- Isolated AWS (deploys 5 nodes to AWS exclusively)
+# Multi-Cloud Node Provisioning with Terraform
 
-For now, we would make our deployments from the Isolated AWS directory
-Follow these steps.
+Infrastructure-as-Code project exploring automated node provisioning across Amazon Web Services (AWS) and Google Cloud Platform (GCP) using Terraform.
 
-1. Clone repo
-`git clone https://github.com/UkemeSkywalker/Multi-Cloud-Node-Provisioning-with-Terraform.git`
-2. Navigate to project directory: 
-` cd Isolated_AWS`
-3. Install AWS CLI [here] (https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-4. Login to AWS console and create an AWS user access credentials for the CLI
-5. Use `aws configure` to configure user credentials 
-6. Run `aws sts get-caller-idenity` to confirm AWS user is mapped to the cli
-7. Install terraform
+The repository contains separate implementations for AWS-only provisioning and an experimental AWS/GCP configuration.
+
+## Project Structure
+
+```text
+.
+├── GCP & AWS/
+│   └── # Experimental multi-cloud implementation
+│
+├── Isolated_AWS/
+│   ├── main.tf
+│   └── modules/
+│       └── aws_nodes/
+│           ├── main.tf
+│           ├── variables.tf
+│           └── vpc.tf
+│
+└── README.md
 ```
- wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
- echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
- sudo apt update && sudo apt install terraform
 
+## Current Implementations
+
+### 1. AWS Node Provisioning
+
+The `Isolated_AWS` configuration provisions an AWS network and a configurable number of EC2 instances.
+
+The current implementation includes:
+
+- AWS provider configuration in `us-east-1`.
+- A VPC using CIDR range `10.0.0.0/16`.
+- Five private subnets distributed across five Availability Zones.
+- A VPN gateway enabled on the VPC.
+- EC2 instance provisioning through a reusable Terraform module.
+- A configurable node count, defaulting to five instances.
+- Randomised node identifiers used in instance naming.
+
+### 2. AWS and GCP Provisioning
+
+The `GCP & AWS` directory contains the experimental multi-cloud implementation.
+
+This part of the project is still under development and should be treated as a work in progress rather than a production-ready multi-cloud deployment.
+
+## Technology Stack
+
+| Component | Technology |
+|---|---|
+| Infrastructure as Code | Terraform |
+| Cloud providers | AWS, GCP (experimental path) |
+| Compute | Amazon EC2 |
+| Networking | Amazon VPC |
+| Terraform modules | terraform-aws-modules/vpc/aws |
+
+## Prerequisites
+
+For the AWS implementation:
+
+- Terraform installed.
+- AWS CLI installed and configured.
+- An AWS account with permissions to provision EC2, VPC and related networking resources.
+- Appropriate AWS credentials.
+
+Prefer AWS IAM Identity Center, an assumed role, or another short-lived credential mechanism instead of hardcoding access keys.
+
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/UkemeSkywalker/Multi-Cloud-Node-Provisioning-with-Terraform.git
+
+cd Multi-Cloud-Node-Provisioning-with-Terraform
 ```
-8. Verify terraform is installed: `terraform -v`
-9. Run bash script to make deployment: `./deploy.sh`
+
+### 2. Configure AWS credentials
+
+Configure your AWS CLI using your organisation's approved authentication method.
+
+Verify the active identity:
+
+```bash
+aws sts get-caller-identity
+```
+
+### 3. Navigate to the AWS implementation
+
+```bash
+cd Isolated_AWS
+```
+
+### 4. Initialise Terraform
+
+```bash
+terraform init
+```
+
+### 5. Validate the configuration
+
+```bash
+terraform fmt -recursive
+terraform validate
+```
+
+### 6. Review the deployment plan
+
+```bash
+terraform plan
+```
+
+### 7. Provision the infrastructure
+
+After reviewing the plan and confirming the expected resources:
+
+```bash
+terraform apply
+```
+
+## Configuration
+
+The AWS node module exposes a `node_count` variable.
+
+Its current default is:
+
+```hcl
+variable "node_count" {
+  description = "Number of nodes to provision"
+  type        = number
+  default     = 5
+}
+```
+
+Adjust the default or expose the variable through the root module to customise the number of instances.
+
+## Important Notes
+
+- The AWS implementation currently provisions EC2 instances; it does not install or configure a blockchain node software client.
+- The AWS/GCP implementation is experimental.
+- Review the AMI, Terraform provider and module versions before deployment.
+- Review subnet routing and connectivity requirements before deploying workloads into the private subnets.
+- Review AWS costs before applying the configuration.
+- The configuration should be validated and tested in a non-production AWS account before wider use.
+
+## Future Improvements
+
+- Complete and validate the AWS/GCP implementation.
+- Add configurable instance types, regions and operating system images.
+- Add cloud-specific modules with reusable inputs and outputs.
+- Add node bootstrap and configuration management.
+- Add remote Terraform state and state locking.
+- Add automated Terraform validation and security scanning.
+- Add deployment and teardown documentation.
+
+## License
+
+See the repository for licensing information.
